@@ -1,8 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
 
-const FALLBACK_SUPABASE_URL = 'https://yvxdggklgwnxjeacovnq.supabase.co'
-const FALLBACK_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2eGRnZ2tsZ3dueGplYWNvdm5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4Mjc3NDQsImV4cCI6MjA5MjQwMzc0NH0.L270lAfqSCUVfuZz8fY0guVuuy0GQzTlLFQF9REjqKA'
-
 function normalizeEnvString(v: string | undefined): string {
   // Guard against accidentally quoted/whitespace-padded values in build vars.
   return (v ?? '').trim().replace(/^"(.*)"$/, '$1')
@@ -60,21 +57,19 @@ function extractRefFromAnonKey(anonKey: string): string {
 
 const envSupabaseUrl = normalizeSupabaseUrl(import.meta.env.VITE_SUPABASE_URL)
 const envSupabaseAnonKey = normalizeEnvString(import.meta.env.VITE_SUPABASE_ANON_KEY)
-const supabaseUrl = envSupabaseUrl || FALLBACK_SUPABASE_URL
-const supabaseAnonKey = envSupabaseAnonKey || FALLBACK_SUPABASE_ANON_KEY
-const isUsingFallbackConfig = !envSupabaseUrl || !envSupabaseAnonKey
+const hasMissingConfig = !envSupabaseUrl || !envSupabaseAnonKey
+const supabaseUrl = envSupabaseUrl
+const supabaseAnonKey = envSupabaseAnonKey
 
 const refFromUrl = extractRefFromSupabaseUrl(supabaseUrl)
 const refFromAnonKey = extractRefFromAnonKey(supabaseAnonKey)
 const isRefMismatch = Boolean(refFromUrl && refFromAnonKey && refFromUrl !== refFromAnonKey)
 
-export const authConfigError = isRefMismatch
-  ? 'VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY belong to different Supabase projects.'
-  : null
-
-if (isUsingFallbackConfig && typeof console !== 'undefined') {
-  console.warn('[supabase] Using built-in fallback config because VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is missing.')
-}
+export const authConfigError = hasMissingConfig
+  ? 'VITE_SUPABASE_URL または VITE_SUPABASE_ANON_KEY が設定されていません。'
+  : isRefMismatch
+    ? 'VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY belong to different Supabase projects.'
+    : null
 
 if (authConfigError && typeof console !== 'undefined') {
   console.error(`[supabase] ${authConfigError}`)

@@ -14,6 +14,14 @@ type Env = {
 
 const corsMethods = 'POST, OPTIONS'
 
+const PRICE_MAP = new Map([
+  ['price_1TQHacALU0WO3UpeDfbtdmME', { label: 'プラン 1', tickets: 30 }],
+  ['price_1TQHaqALU0WO3Uped9KXpkn7', { label: 'プラン 2', tickets: 100 }],
+  ['price_1TQHb8ALU0WO3UpehLwhhUNR', { label: 'プラン 3', tickets: 250 }],
+  ['price_1TQHbUALU0WO3UpeQpDRNFUO', { label: 'プラン 4', tickets: 700 }],
+  ['price_1TQHblALU0WO3UpeYhHH8WRB', { label: 'プラン 5', tickets: 2100 }],
+])
+
 const jsonResponse = (body: unknown, status = 200, headers: HeadersInit = {}) =>
   new Response(JSON.stringify(body), {
     status,
@@ -66,25 +74,23 @@ const requireGoogleUser = async (request: Request, env: Env, corsHeaders: Header
   if (!token) {
     return { response: jsonResponse({ error: 'ログインが必要です。' }, 401, corsHeaders) }
   }
+
   const admin = getSupabaseAdmin(env)
   if (!admin) {
     return { response: jsonResponse({ error: 'SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is not set.' }, 500, corsHeaders) }
   }
+
   const { data, error } = await admin.auth.getUser(token)
   if (error || !data?.user) {
     return { response: jsonResponse({ error: '認証に失敗しました。' }, 401, corsHeaders) }
   }
+
   if (!isGoogleUser(data.user)) {
-    return { response: jsonResponse({ error: 'Googleログインのみ利用できます。' }, 403, corsHeaders) }
+    return { response: jsonResponse({ error: 'Google ログインのみ利用できます。' }, 403, corsHeaders) }
   }
+
   return { admin, user: data.user }
 }
-
-const PRICE_MAP = new Map([
-  ['price_1TIA1SAHjIANZ9z3a3U015UN', { label: 'お試しパック', tickets: 25 }],
-  ['price_1TIA1jAHjIANZ9z3ReE5aAsV', { label: 'お得パック', tickets: 115 }],
-  ['price_1TIA2LAHjIANZ9z3uNOI1ZQr', { label: '大容量パック', tickets: 600 }],
-])
 
 const getRedirectUrl = (env: Env, request: Request, key: 'STRIPE_SUCCESS_URL' | 'STRIPE_CANCEL_URL', fallback: string) =>
   env[key] ?? new URL(fallback, request.url).toString()
@@ -111,7 +117,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const stripeKey = resolveStripeSecretKey(env)
   if (!stripeKey) {
     return jsonResponse(
-      { error: 'Stripe秘密鍵が未設定です。STRIPE_SECRET_KEY（または STRIPE_API_KEY）を設定してください。' },
+      { error: 'Stripe 秘密鍵が未設定です。STRIPE_SECRET_KEY または STRIPE_API_KEY を設定してください。' },
       500,
       corsHeaders,
     )
@@ -129,8 +135,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const email = auth.user.email ?? ''
-  const successUrl = getRedirectUrl(env, request, 'STRIPE_SUCCESS_URL', '/?checkout=success')
-  const cancelUrl = getRedirectUrl(env, request, 'STRIPE_CANCEL_URL', '/?checkout=cancel')
+  const successUrl = getRedirectUrl(env, request, 'STRIPE_SUCCESS_URL', '/purchage?checkout=success')
+  const cancelUrl = getRedirectUrl(env, request, 'STRIPE_CANCEL_URL', '/purchage?checkout=cancel')
 
   const params = new URLSearchParams()
   params.set('mode', 'payment')
@@ -161,20 +167,21 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       body: params.toString(),
     })
   } catch {
-    return jsonResponse({ error: 'Stripe APIへの接続に失敗しました。' }, 502, corsHeaders)
+    return jsonResponse({ error: 'Stripe API への通信に失敗しました。' }, 502, corsHeaders)
   }
 
   const stripeText = await stripeRes.text()
   const stripeData = parseJsonSafely(stripeText)
   if (!stripeRes.ok) {
     const stripeMessage =
-      (stripeData as any)?.error?.message ||
+      (stripeData as { error?: { message?: string } } | null)?.error?.message ||
       (typeof stripeText === 'string' && stripeText.trim() ? stripeText.trim().slice(0, 300) : '')
-    return jsonResponse({ error: stripeMessage || 'Stripeのセッション作成に失敗しました。' }, 500, corsHeaders)
+    return jsonResponse({ error: stripeMessage || 'Stripe セッション作成に失敗しました。' }, 500, corsHeaders)
   }
-  const checkoutUrl = typeof (stripeData as any)?.url === 'string' ? (stripeData as any).url : ''
+
+  const checkoutUrl = typeof (stripeData as { url?: unknown } | null)?.url === 'string' ? (stripeData as { url: string }).url : ''
   if (!checkoutUrl) {
-    return jsonResponse({ error: 'StripeセッションURLの取得に失敗しました。' }, 500, corsHeaders)
+    return jsonResponse({ error: 'Stripe セッション URL の取得に失敗しました。' }, 500, corsHeaders)
   }
 
   return jsonResponse({ url: checkoutUrl }, 200, corsHeaders)

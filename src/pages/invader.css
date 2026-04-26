@@ -1,0 +1,287 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;700;800&family=Outfit:wght@600;700;800&display=swap');
+
+body:has(.invader-page) {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(216, 86, 140, 0.12), transparent 26%),
+    radial-gradient(circle at 88% 14%, rgba(159, 45, 93, 0.1), transparent 28%),
+    linear-gradient(180deg, #020203 0%, #060405 52%, #090607 100%);
+  color: #f8f0f4;
+}
+
+.invader-page {
+  --invader-bg: #020203;
+  --invader-panel: rgba(12, 9, 11, 0.9);
+  --invader-panel-strong: rgba(7, 6, 8, 0.96);
+  --invader-border: rgba(216, 86, 140, 0.18);
+  --invader-border-strong: rgba(216, 86, 140, 0.32);
+  --invader-ink: #f8f0f4;
+  --invader-muted: #ad99a2;
+  --invader-pink: #d8568c;
+  --invader-pink-dark: #a52e67;
+  min-height: 100dvh;
+  padding: 104px 18px 34px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(216, 86, 140, 0.12), transparent 26%),
+    radial-gradient(circle at 88% 14%, rgba(159, 45, 93, 0.1), transparent 28%),
+    linear-gradient(180deg, #020203 0%, #060405 52%, #090607 100%);
+  color: var(--invader-ink);
+  font-family: 'M PLUS 1p', 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+.invader-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0, rgba(216, 86, 140, 0.018) 1px, transparent 1px),
+    linear-gradient(0deg, transparent 0, rgba(216, 86, 140, 0.018) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 88%);
+}
+
+.invader-page .top-nav {
+  background:
+    radial-gradient(circle at 14% 50%, rgba(216, 86, 140, 0.13), transparent 34%),
+    linear-gradient(180deg, rgba(3, 3, 4, 0.985), rgba(9, 7, 9, 0.96));
+  border-bottom: 1px solid rgba(216, 86, 140, 0.14);
+}
+
+.invader-shell {
+  width: 100%;
+  display: grid;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.invader-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: stretch;
+  border: 1px solid var(--invader-border);
+  border-radius: 28px;
+  padding: 22px;
+  background:
+    linear-gradient(145deg, rgba(17, 11, 15, 0.98), rgba(7, 7, 8, 0.98)),
+    var(--invader-panel);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.42);
+}
+
+.invader-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.invader-kicker {
+  margin: 0;
+  font-family: 'Outfit', 'M PLUS 1p', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #d57ca1;
+}
+
+.invader-copy h1,
+.invader-panel h2 {
+  margin: 0;
+  font-family: 'Outfit', 'M PLUS 1p', sans-serif;
+  color: #fff8fb;
+}
+
+.invader-copy h1 {
+  font-size: clamp(1.7rem, 4.4vw, 3.3rem);
+  line-height: 1;
+}
+
+.invader-copy p:last-child {
+  margin: 0;
+  color: var(--invader-muted);
+  line-height: 1.7;
+}
+
+.invader-status {
+  min-width: 220px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(8, 7, 9, 0.9);
+  border: 1px solid rgba(216, 86, 140, 0.14);
+}
+
+.invader-status span {
+  color: var(--invader-muted);
+  font-size: 0.78rem;
+}
+
+.invader-status strong {
+  color: #fff8fb;
+  font-size: 1.2rem;
+}
+
+.invader-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  gap: 18px;
+  align-items: start;
+}
+
+.invader-canvas-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  border: 1px solid var(--invader-border);
+  background: #050305;
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.48);
+}
+
+.invader-canvas-wrap canvas {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+}
+
+.invader-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  padding: 18px;
+  text-align: center;
+  background: radial-gradient(circle, rgba(216, 86, 140, 0.12), rgba(5, 3, 5, 0.78) 62%);
+  backdrop-filter: blur(2px);
+}
+
+.invader-overlay p {
+  margin: 0;
+  font-family: 'Outfit', 'M PLUS 1p', sans-serif;
+  font-size: clamp(2.5rem, 9vw, 6rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff7fb;
+  text-shadow: 0 0 34px rgba(216, 86, 140, 0.38);
+}
+
+.invader-overlay span {
+  color: #e6c9d5;
+  font-size: 0.95rem;
+}
+
+.invader-panel {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--invader-border);
+  border-radius: 28px;
+  padding: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(216, 86, 140, 0.1), transparent 36%),
+    linear-gradient(145deg, rgba(17, 11, 15, 0.98), rgba(7, 7, 8, 0.98));
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.38);
+}
+
+.invader-panel h2 {
+  margin-top: 6px;
+  font-size: 1.25rem;
+}
+
+.invader-panel__text {
+  margin: 8px 0 0;
+  color: var(--invader-muted);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+.invader-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 15px;
+  border: 1px solid transparent;
+  padding: 0 18px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+}
+
+.invader-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.invader-button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+.invader-button--primary {
+  background: linear-gradient(135deg, var(--invader-pink), var(--invader-pink-dark));
+  box-shadow: 0 14px 26px rgba(185, 60, 112, 0.28);
+}
+
+.invader-button--ghost {
+  color: #ecd4dd;
+  border-color: rgba(225, 90, 148, 0.18);
+  background: rgba(24, 18, 22, 0.72);
+}
+
+.invader-message {
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(216, 86, 140, 0.12);
+  background: rgba(11, 9, 12, 0.84);
+  color: #dcc7cf;
+  padding: 11px 13px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.invader-message--error {
+  border-color: rgba(255, 124, 148, 0.22);
+  background: rgba(44, 14, 22, 0.62);
+  color: #ffd3dc;
+}
+
+.invader-controls {
+  display: none;
+  grid-template-columns: 1fr 1.35fr 1fr;
+  gap: 10px;
+}
+
+.invader-controls button {
+  min-height: 54px;
+  border-radius: 16px;
+  border: 1px solid rgba(216, 86, 140, 0.2);
+  background: rgba(18, 12, 16, 0.96);
+  color: #fff7fa;
+  font-family: 'Outfit', 'M PLUS 1p', sans-serif;
+  font-weight: 800;
+  touch-action: none;
+}
+
+@media (max-width: 900px) {
+  .invader-page {
+    padding: 86px 12px 24px;
+  }
+
+  .invader-hero,
+  .invader-board {
+    grid-template-columns: 1fr;
+  }
+
+  .invader-status {
+    min-width: 0;
+  }
+
+  .invader-controls {
+    display: grid;
+  }
+}

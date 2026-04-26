@@ -281,6 +281,12 @@ body:has(.purchase-page) {
   overflow-wrap: anywhere;
 }
 
+.purchase-account__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
 .purchase-auth-empty {
   display: grid;
   gap: 14px;
@@ -291,36 +297,6 @@ body:has(.purchase-page) {
   color: var(--purchase-muted);
   font-size: 0.84rem;
   line-height: 1.7;
-}
-
-.purchase-daily {
-  border-radius: 20px;
-  border: 1px solid var(--purchase-border-strong);
-  background:
-    radial-gradient(circle at top right, rgba(216, 86, 140, 0.12), transparent 38%),
-    linear-gradient(145deg, rgba(18, 12, 16, 0.96), rgba(8, 8, 10, 0.96));
-  padding: 18px;
-  display: grid;
-  gap: 14px;
-}
-
-.purchase-daily__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.purchase-daily__head h3 {
-  margin-top: 6px;
-  font-size: 1rem;
-  color: #fff7fa;
-}
-
-.purchase-daily__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
 .purchase-button {
@@ -527,7 +503,6 @@ body:has(.purchase-page) {
   }
 
   .purchase-panel__head,
-  .purchase-daily__head,
   .purchase-plan__head {
     flex-direction: column;
     align-items: flex-start;
@@ -537,9 +512,5 @@ body:has(.purchase-page) {
 @media (max-width: 520px) {
   .purchase-button {
     width: 100%;
-  }
-
-  .purchase-daily__actions {
-    display: grid;
   }
 }
